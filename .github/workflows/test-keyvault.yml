@@ -54,7 +54,7 @@ jobs:
 
             if [ -n "$SECRET_NAME" ]; then
               echo "✅ Acceso exitoso al Key Vault"
-              echo "✅ Secret encontrado (longitud: ${#SECRET_VALUE} caracteres)"
+              echo "✅ Secret encontrado (longitud: ${#SECRET_NAME} caracteres)"
             else
               echo "❌ No se pudo obtener el secret"
               exit 1
