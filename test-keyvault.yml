@@ -1,0 +1,53 @@
+name: Test Azure Key Vault Access
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-keyvault:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Get Key Vault Secret
+        uses: azure/CLI@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            echo "🔐 Accediendo a Azure Key Vault..."
+            
+            # Reemplaza estos valores con tu configuración
+            KEY_VAULT_NAME="${{ secrets.KEY_VAULT_NAME }}"
+            SECRET_NAME="${{ secrets.SECRET_NAME }}"
+            
+            echo "Key Vault: $KEY_VAULT_NAME"
+            echo "Secret: $SECRET_NAME"
+            
+            # Intentar obtener el secreto del Key Vault
+            SECRET_VALUE=$(az keyvault secret show \
+              --vault-name "$KEY_VAULT_NAME" \
+              --name "$SECRET_NAME" \
+              --query value \
+              --output tsv)
+            
+            if [ -n "$SECRET_VALUE" ]; then
+              echo "✅ Acceso exitoso al Key Vault"
+              echo "✅ Secret encontrado (longitud: ${#SECRET_VALUE} caracteres)"
+            else
+              echo "❌ No se pudo obtener el secret"
+              exit 1
+            fi
+
+      - name: Test Completed
+        run: |
+          echo "🎉 Prueba de acceso a Key Vault completada exitosamente"
