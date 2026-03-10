@@ -26,7 +26,6 @@ jobs:
           inlineScript: |
             echo "🔐 Accediendo a Azure Key Vault..."
             
-            # Reemplaza estos valores con tu configuración
             KEY_VAULT_NAME="${{ secrets.KEY_VAULT_NAME }}"
             SECRET_NAME="${{ secrets.SECRET_NAME }}"
             
@@ -39,8 +38,21 @@ jobs:
               --name "$SECRET_NAME" \
               --query value \
               --output tsv)
+            SECRET_NAME=$(az keyvault secret show \
+              --vault-name "$KEY_VAULT_NAME" \
+              --name "owner-name" \
+              --query value \
+              --output tsv)
             
             if [ -n "$SECRET_VALUE" ]; then
+              echo "✅ Acceso exitoso al Key Vault"
+              echo "✅ Secret encontrado (longitud: ${#SECRET_VALUE} caracteres)"
+            else
+              echo "❌ No se pudo obtener el secret"
+              exit 1
+            fi
+
+            if [ -n "$SECRET_NAME" ]; then
               echo "✅ Acceso exitoso al Key Vault"
               echo "✅ Secret encontrado (longitud: ${#SECRET_VALUE} caracteres)"
             else
