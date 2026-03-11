@@ -27,7 +27,7 @@ jobs:
             echo "🔐 Accediendo a Azure Key Vault..."
             
             KEY_VAULT_NAME="${{ secrets.KEY_VAULT_NAME }}"
-            SECRET_NAME="${{ secrets.SECRET_NAME }}"
+            SECRET_NAME="${{ secrets.OWNER_NAME }}"
             
             echo "Key Vault: $KEY_VAULT_NAME"
             echo "Secret: $SECRET_NAME"
