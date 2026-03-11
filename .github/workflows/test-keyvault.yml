@@ -35,26 +35,13 @@ jobs:
             # Intentar obtener el secreto del Key Vault
             SECRET_VALUE=$(az keyvault secret show \
               --vault-name "$KEY_VAULT_NAME" \
-              --name "$SECRET_NAME" \
-              --query value \
-              --output tsv)
-            SECRET_NAME=$(az keyvault secret show \
-              --vault-name "$KEY_VAULT_NAME" \
-              --name "owner-name" \
+              --name "$OWNER_NAME" \
               --query value \
               --output tsv)
             
             if [ -n "$SECRET_VALUE" ]; then
               echo "✅ Acceso exitoso al Key Vault"
               echo "✅ Secret encontrado (longitud: ${#SECRET_VALUE} caracteres)"
-            else
-              echo "❌ No se pudo obtener el secret"
-              exit 1
-            fi
-
-            if [ -n "$SECRET_NAME" ]; then
-              echo "✅ Acceso exitoso al Key Vault"
-              echo "✅ Secret encontrado (longitud: ${#SECRET_NAME} caracteres)"
             else
               echo "❌ No se pudo obtener el secret"
               exit 1
